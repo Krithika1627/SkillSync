@@ -81,7 +81,10 @@ function UserList({ users, refresh, onSelect, onMessage }) {
               </div>
             </div>
                       
-            <button onClick={() => onMessage(u.user_id)}>
+            <button onClick={() => onMessage({
+              id: u.user_id,
+              name: u.first_name + " " + u.last_name
+            })}>
               Message
             </button>
 

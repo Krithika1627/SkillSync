@@ -744,12 +744,16 @@ app.get("/messages/:user1/:user2", async (req, res) => {
   try {
     const user1 = Number(req.params.user1);
     const user2 = Number(req.params.user2);
-
+    if (isNaN(user1) || isNaN(user2)) {
+      console.log("Invalid params:", req.params);
+      return res.status(400).send("Invalid user IDs");
+    }
+    
     const conn = await oracledb.getConnection(dbConfig);
 
     const result = await conn.execute(
-      `SELECT sender_id, receiver_id, content, timestamp
-       FROM MESSAGE
+      `SELECT m.sender_id, m.receiver_id, m.content, m.timestamp, u.first_name
+       FROM MESSAGE m join USERS u on m.sender_id=u.user_id
        WHERE (sender_id = :user1 AND receiver_id = :user2)
           OR (sender_id = :user2 AND receiver_id = :user1)
        ORDER BY timestamp`,

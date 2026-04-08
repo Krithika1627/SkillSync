@@ -25,14 +25,19 @@ function Users() {
 
   // ===================== ADD THIS (CHAT FUNCTIONS) =====================
 
-  const openChat = async (userId) => {
-    setChatUser(userId);
-
-    const currentUser = localStorage.getItem("user_id");
-
+  const openChat = async (user) => {
+    const currentUser = Number(localStorage.getItem("user_id"));
+  
+    if (!currentUser || !user?.id) {
+      console.log("Invalid IDs", currentUser, user);
+      return;
+    }
+  
+    setChatUser(user);
+  
     try {
       const res = await axios.get(
-        `http://localhost:3000/messages/${currentUser}/${userId}`
+        `http://localhost:3000/messages/${currentUser}/${user.id}`
       );
       setMessages(res.data);
     } catch (err) {
@@ -48,7 +53,7 @@ function Users() {
     try {
       await axios.post("http://localhost:3000/message", {
         sender_id,
-        receiver_id: chatUser,
+        receiver_id: chatUser.id,
         content: newMessage,
       });
 
@@ -84,7 +89,7 @@ function Users() {
       {/* ===================== ADD THIS (CHAT UI) ===================== */}
       {chatUser && (
         <div style={{ marginTop: "20px", border: "1px solid #ccc", padding: "10px" }}>
-          <h3>Chat</h3>
+          <h3>💬 Chat with {chatUser?.name}</h3>
 
           <div style={{ height: "200px", overflowY: "scroll", marginBottom: "10px" }}>
             {messages.map((msg, index) => (

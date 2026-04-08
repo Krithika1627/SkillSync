@@ -17,11 +17,13 @@ function Requests() {
 
   const acceptRequest = async (id) => {
     await axios.put(`http://localhost:3000/requests/accept/${id}`);
+    alert("Request Accepted!");
     fetchRequests();
   };
 
   const rejectRequest = async (id) => {
     await axios.put(`http://localhost:3000/requests/reject/${id}`);
+    alert("Request Rejected!")
     fetchRequests();
   };
 
